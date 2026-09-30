@@ -23,9 +23,9 @@ $(TEST_DISPATCHER): tests/test_dispatcher.c src/irc_core.c src/dispatcher.c src/
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_dispatcher.c src/irc_core.c src/dispatcher.c -o $(TEST_DISPATCHER)
 
-$(TEST_RUNTIME): tests/test_runtime.c src/runtime_adapter.c src/runtime_adapter.h src/irc_core.h
+$(TEST_RUNTIME): tests/test_runtime.c src/runtime_adapter.c src/runtime_adapter.h src/forth_vm.c src/forth_vm.h src/irc_core.h
 	@mkdir -p build
-	$(CC) $(CFLAGS) tests/test_runtime.c src/runtime_adapter.c -o $(TEST_RUNTIME)
+	$(CC) $(CFLAGS) tests/test_runtime.c src/runtime_adapter.c src/forth_vm.c -o $(TEST_RUNTIME)
 
 $(TEST_FORTH_VM): tests/test_forth_vm.c src/forth_vm.c src/forth_vm.h
 	@mkdir -p build
