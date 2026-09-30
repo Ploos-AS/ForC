@@ -5,9 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int append_output(forth_vm *vm, const char *text) {
-    size_t used = strlen(vm->output);
-    size_t left = sizeof(vm->output) - used;
+int forth_vm_emit(forth_vm *vm, const char *text) {
+    size_t used;
+    size_t left;
+    if (!vm || !text) return 0;
+    used = strlen(vm->output);
+    left = sizeof(vm->output) - used;
     if (left <= 1) return 0;
     snprintf(vm->output + used, left, "%s", text);
     return 1;
@@ -47,7 +50,7 @@ static int word_dot(forth_vm *vm) {
     char buf[64];
     if (!forth_vm_pop(vm, &v)) return 0;
     snprintf(buf, sizeof(buf), "%ld ", v);
-    return append_output(vm, buf);
+    return forth_vm_emit(vm, buf);
 }
 
 void forth_vm_init(forth_vm *vm) {
