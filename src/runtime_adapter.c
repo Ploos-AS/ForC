@@ -63,3 +63,10 @@ int forc_runtime_bind_events(event_registry *registry){
     }
     return 1;
 }
+
+static irc_output_sink forc_sink;
+void forc_runtime_set_output_sink(const irc_output_sink *sink){if(sink) forc_sink=*sink; else memset(&forc_sink,0,sizeof(forc_sink));}
+int forc_runtime_say(const char *target,const char *text){return irc_send_privmsg(&forc_sink,target,text);}
+int forc_runtime_notice(const char *target,const char *text){return irc_send_notice(&forc_sink,target,text);}
+int forc_runtime_join(const char *channel){return irc_send_join(&forc_sink,channel);}
+int forc_runtime_part(const char *channel,const char *reason){return irc_send_part(&forc_sink,channel,reason);}
