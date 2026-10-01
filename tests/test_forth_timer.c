@@ -6,4 +6,5 @@ int main(void){irc_event e={0};char reply[128]={0};long id=0;if(forc_runtime_ini
  memset(reply,0,sizeof(reply)); if(!forc_runtime_command("!hello2",&e,reply,sizeof(reply)))return 19; if(strcmp(reply,"Registered COMMAND")!=0)return 20;
  if(!forc_runtime_word(": CTX \\"TEXT\\" ; \\"!ctx\\" \\"CTX\\" COMMAND",&e,reply,sizeof(reply)))return 21;
  memset(reply,0,sizeof(reply)); memset(&e,0,sizeof(e)); e.type=IRC_EVENT_PRIVMSG; snprintf(e.nick,sizeof(e.nick),"alice"); snprintf(e.target,sizeof(e.target),"#test"); snprintf(e.text,sizeof(e.text),"!ctx Per Ola"); if(!forc_runtime_command("!ctx",&e,reply,sizeof(reply)))return 22; if(strcmp(reply,"!ctx Per Ola")!=0)return 23;
+ if(!forc_runtime_word(": ARG \"COMMAND\" \"ARGS\" ; \"!hello\" \"ARG\" COMMAND",&e,reply,sizeof(reply)))return 24; memset(reply,0,sizeof(reply)); if(!forc_runtime_command("!hello",&e,reply,sizeof(reply)))return 25; if(strcmp(reply,"helloPer Ola")!=0)return 26;
  forc_runtime_shutdown();puts("ForC Forth timer ID lifecycle: PASS");return 0;}
