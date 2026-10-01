@@ -7,4 +7,6 @@ typedef struct { bot_timer_dispatch_fn dispatch; void *user; } bot_timer_dispatc
 typedef struct { char name[BOT_TIMER_HANDLER_NAME_MAX]; bot_timer_dispatcher dispatcher; } bot_timer_binding;
 int bot_timer_bind(bot_timer_binding *binding,const char *name,const bot_timer_dispatcher *dispatcher);
 int bot_timer_dispatch(const bot_timer_binding *binding,bot_timer_id id);
+typedef struct { char name[BOT_TIMER_HANDLER_NAME_MAX]; bot_timer_dispatcher dispatcher; } bot_named_timer_context;
+int bot_named_timer_callback(bot_timer_id id,void *user);
 #endif
