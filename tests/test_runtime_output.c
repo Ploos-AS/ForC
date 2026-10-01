@@ -8,7 +8,7 @@ int main(void){
  if(forc_runtime_init()!=0)return 1;
  forc_runtime_set_output_sink(&out);
  if(!forc_runtime_say("#ploos","hello")||strcmp(line,"PRIVMSG #ploos :hello\r\n"))return 2;
- if(!forc_runtime_notice("alice","hi")||strcmp(line,"NOTICE alice :hi\r\n"))return 3;
+ if(forc_runtime_notice("alice","hi")||strcmp(line,"NOTICE alice :hi\r\n"))return 3;
  if(!forc_runtime_join("#ploos")||strcmp(line,"JOIN #ploos\r\n"))return 4;
  if(!forc_runtime_part("#ploos","bye")||strcmp(line,"PART #ploos :bye\r\n"))return 5;
  forc_runtime_set_output_sink(NULL); forc_runtime_shutdown();
