@@ -9,6 +9,8 @@ bot_timer_id forc_runtime_timer_after(uint64_t d,bot_timer_fn fn,void *u){return
 bot_timer_id forc_runtime_timer_every(uint64_t i,bot_timer_fn fn,void *u){return bot_timer_add(&forc_timers,i,i,1,fn,u);}
 int forc_runtime_timer_cancel(bot_timer_id id){return bot_timer_cancel(&forc_timers,id);}
 size_t forc_runtime_timer_poll(uint64_t now){return bot_timer_poll(&forc_timers,now);}
+static int forc_timer_dispatch(const char *handler,bot_timer_id id,void *user){forth_vm *v=(forth_vm *)user;(void)id;if(!v||!handler)return -1;forth_vm_clear_output(v);return forth_vm_eval(v,handler)?0:-1;}
+static bot_timer_id forc_named_timer(uint64_t delay,uint64_t interval,int repeat,const char *name){bot_named_timer_context *ctx;bot_timer_id id;if(!name||!name[0]||forc_named_count>=BOT_MAX_TIMERS)return 0;ctx=&forc_named_timers[forc_named_count++];memset(ctx,0,sizeof(*ctx));snprintf(ctx->name,sizeof(ctx->name),"%s",name);ctx->dispatcher.dispatch=forc_timer_dispatch;ctx->dispatcher.user=&vm;id=bot_timer_add(&forc_timers,delay,interval,repeat,bot_named_timer_callback,ctx);if(!id){forc_named_count--;return 0;}return id;}
 static int word_ping(forth_vm*r){return forth_vm_emit(r,"PONG");}
 static int word_hello(forth_vm*r){return forth_vm_emit(r,"Hello from ForC");}
 static int word_say(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return irc_send_privmsg(&forc_sink,t,x);}
