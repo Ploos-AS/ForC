@@ -22,3 +22,5 @@ int forc_runtime_timer_cancel(bot_timer_id id);
 size_t forc_runtime_timer_poll(uint64_t now_ms);
 int forc_runtime_timer_cancel(bot_timer_id id);
 #endif
+
+int forc_runtime_grant_capability(const char *cap);
