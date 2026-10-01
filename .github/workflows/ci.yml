@@ -5,6 +5,23 @@ on:
   pull_request:
 
 jobs:
+  standalone-contract:
+    runs-on: ubuntu-latest
+    env:
+      FORC_PBMP_SOCKET: ""
+      FORC_BOTWEB_URL: ""
+      FORC_BOTAI_URL: ""
+      FORC_BOTLOGIC_URL: ""
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qualify standalone core with all integrations disabled
+        run: |
+          test -z "$FORC_PBMP_SOCKET"
+          test -z "$FORC_BOTWEB_URL"
+          test -z "$FORC_BOTAI_URL"
+          test -z "$FORC_BOTLOGIC_URL"
+          make test
+
   test:
     runs-on: ubuntu-latest
     steps:
