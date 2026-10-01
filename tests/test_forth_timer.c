@@ -1,4 +1,3 @@
 #include "../src/runtime_adapter.h"
 #include <stdio.h>
-#include <string.h>
-int main(void){irc_event e={0};char reply[128]={0};if(forc_runtime_init()!=0)return 1;if(!forc_runtime_word(": HEARTBEAT PING ; 10 \"HEARTBEAT\" AFTER HELLO",&e,reply,sizeof(reply)))return 2;if(strcmp(reply,"Hello from ForC")!=0)return 3;if(forc_runtime_timer_poll(9)!=0)return 4;if(forc_runtime_timer_poll(10)!=1)return 5;forc_runtime_shutdown();puts("ForC Forth named timer: PASS");return 0;}
+int main(void){irc_event e={0};char reply[128]={0};if(forc_runtime_init()!=0)return 1;if(!forc_runtime_word(": HEARTBEAT PING ; 10 \"HEARTBEAT\" AFTER",&e,reply,sizeof(reply)))return 2;if(forc_runtime_timer_poll(9)!=0)return 3;if(forc_runtime_timer_poll(10)!=1)return 4;if(!forc_runtime_word(": TICK PING ; 20 \"TICK\" EVERY",&e,reply,sizeof(reply)))return 5;if(forc_runtime_timer_poll(19)!=0)return 6;if(forc_runtime_timer_poll(20)!=1)return 7;if(forc_runtime_timer_poll(40)!=1)return 8;forc_runtime_shutdown();puts("ForC Forth named timers: PASS");return 0;}
