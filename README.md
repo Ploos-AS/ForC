@@ -20,6 +20,7 @@ The standalone runtime now has a qualified language-neutral contract for IRC com
 - PBMP integration boundary defined from the start
 - Hooks for BotWeb and BotAI
 - Standalone-first operation
+- Standalone qualification with PBMP, BotWeb, BotAI and BotLogic disabled
 - Deterministic tests for parser, dispatch, dictionary and VM behavior
 
 ## Initial architecture
@@ -66,8 +67,11 @@ A privileged IRC/private-message REPL is a later milestone, not an M0 requiremen
 3. IRC concepts should feel native to the Forth dictionary.
 4. Script/VM errors must be isolated from the IRC core.
 5. PBMP integration is optional at runtime, but first-class in the architecture.
-6. BotWeb and BotAI remain optional components.
+6. BotWeb, BotAI and BotLogic remain optional components.
 7. No malware or offensive payloads are stored in the repository.
+
+
+Standalone qualification requires the bot to build and pass its core test suite with PBMP, BotWeb, BotAI and BotLogic disabled. None of these integrations may become a required build/runtime dependency.
 
 ## License
 
