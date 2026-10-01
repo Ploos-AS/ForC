@@ -17,7 +17,7 @@ TEST_TIMERS := build/test_timers
 TEST_TIMER_HANDLERS := build/test_timer_handlers
 TEST_FORTH_VM := build/test_forth_vm
 TEST_FORTH_TIMER := build/test_forth_timer
-SRC := src/bot_state.c src/bot_caps.c src/bot_runtime.c src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/forth_vm.c
+SRC := src/bot_state.c src/bot_caps.c src/bot_runtime.c src/bot_state_backend.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/irc_output.c src/irc_output_sink.c src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/forth_vm.c
 .PHONY: all test clean
 all: $(BIN)
 $(BIN): $(SRC)
