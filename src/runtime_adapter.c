@@ -50,3 +50,5 @@ int forc_runtime_say(const char*t,const char*x){return irc_send_privmsg(&forc_si
 int forc_runtime_notice(const char*t,const char*x){return irc_send_notice(&forc_sink,t,x);}
 int forc_runtime_join(const char*c){return irc_send_join(&forc_sink,c);}
 int forc_runtime_part(const char*c,const char*r){return irc_send_part(&forc_sink,c,r);}
+
+int forc_runtime_grant_capability(const char *cap){return bot_rt&&cap&&bot_runtime_grant(bot_rt,cap);}
