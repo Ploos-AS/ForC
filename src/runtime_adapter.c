@@ -1,5 +1,6 @@
 #include "runtime_adapter.h"
 #include "forth_vm.h"
+#include "timer_handlers.h"
 #include <stdio.h>
 #include <string.h>
 static int initialized; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
