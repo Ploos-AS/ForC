@@ -3,7 +3,7 @@
 #include "timer_handlers.h"
 #include <stdio.h>
 #include <string.h>
-typedef struct { char name[32]; int active; } forc_event_binding; static forc_event_binding forc_events[8];
+typedef struct { char event[32]; char handler[32]; int active; } forc_event_binding; static forc_event_binding forc_events[8];
 static bot_named_timer_context forc_named_timers[BOT_MAX_TIMERS]; static size_t forc_named_count;\nstatic int initialized; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
 void forc_runtime_timer_init(void){bot_timer_registry_init(&forc_timers);memset(forc_named_timers,0,sizeof(forc_named_timers));forc_named_count=0;}
 bot_timer_id forc_runtime_timer_after(uint64_t d,bot_timer_fn fn,void *u){return bot_timer_add(&forc_timers,d,0,0,fn,u);}
@@ -22,13 +22,13 @@ static int word_notice(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];
 static int word_join(forth_vm*r){char c[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,c,sizeof(c)))return 0;return irc_send_join(&forc_sink,c);}
 static int word_part(forth_vm*r){char x[FORTH_STRING_MAX],c[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,c,sizeof(c)))return 0;return irc_send_part(&forc_sink,c,x);}
 static int forc_event_type(const char *name){if(!name)return 0;if(strcmp(name,"JOIN")==0)return IRC_EVENT_JOIN;if(strcmp(name,"PART")==0)return IRC_EVENT_PART;if(strcmp(name,"NICK")==0)return IRC_EVENT_NICK;if(strcmp(name,"QUIT")==0)return IRC_EVENT_QUIT;if(strcmp(name,"NOTICE")==0)return IRC_EVENT_NOTICE;if(strcmp(name,"PRIVMSG")==0)return IRC_EVENT_PRIVMSG;return 0;}
-static int word_on(forth_vm*r){char handler[FORTH_STRING_MAX],event[FORTH_STRING_MAX];int t;size_t i;if(!forth_vm_pop_string(r,handler,sizeof(handler))||!forth_vm_pop_string(r,event,sizeof(event)))return 0;t=forc_event_type(event);if(!t||t>=8)return 0;for(i=0;i<8;i++)if(!forc_events[i].active||strcmp(forc_events[i].name,event)==0){snprintf(forc_events[i].name,sizeof(forc_events[i].name),"%s",event);forc_events[i].active=1;return forth_vm_define_colon(r,handler,handler); }return 0;}
+static int word_on(forth_vm*r){char handler[FORTH_STRING_MAX],event[FORTH_STRING_MAX];size_t i;if(!forth_vm_pop_string(r,handler,sizeof(handler))||!forth_vm_pop_string(r,event,sizeof(event)))return 0;if(!forc_event_type(event)||strlen(handler)>=sizeof(forc_events[0].handler))return 0;for(i=0;i<8;i++)if(!forc_events[i].active||strcmp(forc_events[i].event,event)==0){snprintf(forc_events[i].event,sizeof(forc_events[i].event),"%s",event);snprintf(forc_events[i].handler,sizeof(forc_events[i].handler),"%s",handler);forc_events[i].active=1;return 1;}return 0;}
 int forc_runtime_init(void){memset(forc_events,0,sizeof(forc_events));forc_runtime_timer_init();forth_vm_init(&vm);if(!forth_vm_define_native(&vm,"PING",word_ping)||!forth_vm_define_native(&vm,"HELLO",word_hello)||!forth_vm_define_native(&vm,"JOIN",word_join)||!forth_vm_define_native(&vm,"SAY",word_say)||!forth_vm_define_native(&vm,"NOTICE",word_notice)||!forth_vm_define_native(&vm,"PART",word_part)||!forth_vm_define_native(&vm,"AFTER",word_after)||!forth_vm_define_native(&vm,"EVERY",word_every)||!forth_vm_define_native(&vm,"CANCEL",word_cancel)||!forth_vm_define_native(&vm,"ON",word_on))return -1;initialized=1;return 0;}
 void forc_runtime_shutdown(void){memset(&vm,0,sizeof(vm));initialized=0;}
 int forc_runtime_stack_depth(void){return forth_vm_depth(&vm);}
 int forc_runtime_stack_peek(long *value){return forth_vm_peek(&vm,value);}
 int forc_runtime_word(const char*word,const irc_event*event,char*reply,size_t rs){(void)event;if(!initialized||!word||!reply||!rs)return 0;forth_vm_clear_output(&vm);if(!forth_vm_eval(&vm,word))return 0;if(forth_vm_output(&vm)[0]=='\0')return 0;snprintf(reply,rs,"%s",forth_vm_output(&vm));return 1;}
-int forc_runtime_event(const char*n,const irc_event*e,char*r,size_t rs){if(!initialized||!n||!e||!r||!rs)return 0;return forc_runtime_word(n,e,r,rs);}
+int forc_runtime_event(const char*n,const irc_event*e,char*r,size_t rs){size_t i;if(!initialized||!n||!e||!r||!rs)return 0;for(i=0;i<8;i++)if(forc_events[i].active&&strcasecmp(forc_events[i].event,n)==0)return forc_runtime_word(forc_events[i].handler,e,r,rs);return forc_runtime_word(n,e,r,rs);}
 void forc_runtime_set_output_sink(const irc_output_sink*s){if(s)forc_sink=*s;else memset(&forc_sink,0,sizeof(forc_sink));}
 int forc_runtime_say(const char*t,const char*x){return irc_send_privmsg(&forc_sink,t,x);}
 int forc_runtime_notice(const char*t,const char*x){return irc_send_notice(&forc_sink,t,x);}
