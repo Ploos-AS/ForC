@@ -4,4 +4,6 @@ int main(void){irc_event e={0};char reply[128]={0};long id=0;if(forc_runtime_ini
  irc_event ev={0}; ev.type=IRC_EVENT_JOIN; snprintf(ev.nick,sizeof(ev.nick),"alice"); snprintf(ev.target,sizeof(ev.target),"#test"); memset(reply,0,sizeof(reply)); if(!forc_runtime_event("JOIN",&ev,reply,sizeof(reply)))return 16; if(strcmp(reply,"Registered JOIN")!=0)return 17;
  if(!forc_runtime_word(": HELLO2 \"Registered COMMAND\" ; \"!hello2\" \"HELLO2\" COMMAND",&e,reply,sizeof(reply)))return 18;
  memset(reply,0,sizeof(reply)); if(!forc_runtime_command("!hello2",&e,reply,sizeof(reply)))return 19; if(strcmp(reply,"Registered COMMAND")!=0)return 20;
+ if(!forc_runtime_word(": CTX \\"TEXT\\" ; \\"!ctx\\" \\"CTX\\" COMMAND",&e,reply,sizeof(reply)))return 21;
+ memset(reply,0,sizeof(reply)); memset(&e,0,sizeof(e)); e.type=IRC_EVENT_PRIVMSG; snprintf(e.nick,sizeof(e.nick),"alice"); snprintf(e.target,sizeof(e.target),"#test"); snprintf(e.text,sizeof(e.text),"!ctx Per Ola"); if(!forc_runtime_command("!ctx",&e,reply,sizeof(reply)))return 22; if(strcmp(reply,"!ctx Per Ola")!=0)return 23;
  forc_runtime_shutdown();puts("ForC Forth timer ID lifecycle: PASS");return 0;}
