@@ -32,8 +32,8 @@ static int word_state_get(forth_vm*r){char k[256],s[256];const char*v;if(!forth_
 static int word_state_delete(forth_vm*r){char k[256],s[256];if(!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;return bot_runtime_has(bot_rt,"state.delete")&&bot_state_delete(bot_rt->state,s,k);}
 static int word_ping(forth_vm*r){return forth_vm_emit(r,"PONG");}
 static int word_hello(forth_vm*r){return forth_vm_emit(r,"Hello from ForC");}
-static int word_say(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return irc_send_privmsg(&forc_sink,t,x);}
-static int word_notice(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return irc_send_notice(&forc_sink,t,x);}
+static int word_say(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return bot_runtime_has(bot_rt,"irc.say")&&irc_send_privmsg(&forc_sink,t,x);}
+static int word_notice(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return bot_runtime_has(bot_rt,"irc.notice")&&irc_send_notice(&forc_sink,t,x);}
 static int word_join(forth_vm*r){char c[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,c,sizeof(c)))return 0;return irc_send_join(&forc_sink,c);}
 static int word_part(forth_vm*r){char x[FORTH_STRING_MAX],c[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,c,sizeof(c)))return 0;return irc_send_part(&forc_sink,c,x);}
 static int forc_event_type(const char *name){if(!name)return 0;if(strcmp(name,"JOIN")==0)return IRC_EVENT_JOIN;if(strcmp(name,"PART")==0)return IRC_EVENT_PART;if(strcmp(name,"NICK")==0)return IRC_EVENT_NICK;if(strcmp(name,"QUIT")==0)return IRC_EVENT_QUIT;if(strcmp(name,"NOTICE")==0)return IRC_EVENT_NOTICE;if(strcmp(name,"PRIVMSG")==0)return IRC_EVENT_PRIVMSG;return 0;}
