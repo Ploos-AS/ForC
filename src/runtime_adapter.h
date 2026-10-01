@@ -20,4 +20,5 @@ bot_timer_id forc_runtime_timer_after(uint64_t delay_ms,bot_timer_fn handler,voi
 bot_timer_id forc_runtime_timer_every(uint64_t interval_ms,bot_timer_fn handler,void *user);
 int forc_runtime_timer_cancel(bot_timer_id id);
 size_t forc_runtime_timer_poll(uint64_t now_ms);
+int forc_runtime_timer_cancel(bot_timer_id id);
 #endif
