@@ -27,9 +27,9 @@ static int word_state_event_user(forth_vm*r){char b[256];if(!forc_active_event_v
 static int word_state_event_target(forth_vm*r){char b[256];if(!forc_active_event_valid||!bot_state_scope_event_target(&forc_active_event,b,sizeof(b)))return 0;return forth_vm_emit(r,b);}
 static int word_state_user_scope(forth_vm*r){char n[256],b[256];if(!forth_vm_pop_string(r,n,sizeof(n))||!bot_state_scope_user(n,b,sizeof(b)))return 0;return forth_vm_emit(r,b);}
 static int word_state_channel_scope(forth_vm*r){char n[256],b[256];if(!forth_vm_pop_string(r,n,sizeof(n))||!bot_state_scope_channel(n,b,sizeof(b)))return 0;return forth_vm_emit(r,b);}
-static int word_state_set(forth_vm*r){char v[512],k[256],s[256];if(!forth_vm_pop_string(r,v,sizeof(v))||!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;return bot_caps_require(bot_rt->caps,"state.write")&&bot_state_set(bot_rt->state,s,k,v);}
-static int word_state_get(forth_vm*r){char k[256],s[256];const char*v;if(!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;v=bot_caps_require(bot_rt->caps,"state.read")?bot_state_get(bot_rt->state,s,k):NULL;return v?forth_vm_emit(r,v):0;}
-static int word_state_delete(forth_vm*r){char k[256],s[256];if(!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;return bot_caps_require(bot_rt->caps,"state.delete")&&bot_state_delete(bot_rt->state,s,k);}
+static int word_state_set(forth_vm*r){char v[512],k[256],s[256];if(!forth_vm_pop_string(r,v,sizeof(v))||!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;return bot_runtime_has(bot_rt,"state.write")&&bot_state_set(bot_rt->state,s,k,v);}
+static int word_state_get(forth_vm*r){char k[256],s[256];const char*v;if(!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;v=bot_runtime_has(bot_rt,"state.read")?bot_state_get(bot_rt->state,s,k):NULL;return v?forth_vm_emit(r,v):0;}
+static int word_state_delete(forth_vm*r){char k[256],s[256];if(!forth_vm_pop_string(r,k,sizeof(k))||!forth_vm_pop_string(r,s,sizeof(s)))return 0;return bot_runtime_has(bot_rt,"state.delete")&&bot_state_delete(bot_rt->state,s,k);}
 static int word_ping(forth_vm*r){return forth_vm_emit(r,"PONG");}
 static int word_hello(forth_vm*r){return forth_vm_emit(r,"Hello from ForC");}
 static int word_say(forth_vm*r){char x[FORTH_STRING_MAX],t[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,t,sizeof(t)))return 0;return irc_send_privmsg(&forc_sink,t,x);}
