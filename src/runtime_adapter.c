@@ -29,6 +29,7 @@ int forc_runtime_stack_depth(void){return forth_vm_depth(&vm);}
 int forc_runtime_stack_peek(long *value){return forth_vm_peek(&vm,value);}
 int forc_runtime_word(const char*word,const irc_event*event,char*reply,size_t rs){(void)event;if(!initialized||!word||!reply||!rs)return 0;forth_vm_clear_output(&vm);if(!forth_vm_eval(&vm,word))return 0;if(forth_vm_output(&vm)[0]=='\0')return 0;snprintf(reply,rs,"%s",forth_vm_output(&vm));return 1;}
 int forc_runtime_event(const char*n,const irc_event*e,char*r,size_t rs){size_t i;if(!initialized||!n||!e||!r||!rs)return 0;for(i=0;i<8;i++)if(forc_events[i].active&&strcasecmp(forc_events[i].event,n)==0)return forc_runtime_word(forc_events[i].handler,e,r,rs);return forc_runtime_word(n,e,r,rs);}
+int forc_runtime_command(const char*n,const irc_event*e,char*r,size_t rs){size_t i;if(!initialized||!n||!e||!r||!rs)return 0;for(i=0;i<32;i++)if(forc_commands[i].active&&strcmp(forc_commands[i].event,n)==0)return forc_runtime_word(forc_commands[i].handler,e,r,rs);return forc_runtime_word(n,e,r,rs);}
 void forc_runtime_set_output_sink(const irc_output_sink*s){if(s)forc_sink=*s;else memset(&forc_sink,0,sizeof(forc_sink));}
 int forc_runtime_say(const char*t,const char*x){return irc_send_privmsg(&forc_sink,t,x);}
 int forc_runtime_notice(const char*t,const char*x){return irc_send_notice(&forc_sink,t,x);}
