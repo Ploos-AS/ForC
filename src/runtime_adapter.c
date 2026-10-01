@@ -22,6 +22,8 @@ static int word_join(forth_vm*r){char c[FORTH_STRING_MAX];if(!forth_vm_pop_strin
 static int word_part(forth_vm*r){char x[FORTH_STRING_MAX],c[FORTH_STRING_MAX];if(!forth_vm_pop_string(r,x,sizeof(x))||!forth_vm_pop_string(r,c,sizeof(c)))return 0;return irc_send_part(&forc_sink,c,x);}
 int forc_runtime_init(void){forc_runtime_timer_init();forth_vm_init(&vm);if(!forth_vm_define_native(&vm,"PING",word_ping)||!forth_vm_define_native(&vm,"HELLO",word_hello)||!forth_vm_define_native(&vm,"JOIN",word_join)||!forth_vm_define_native(&vm,"SAY",word_say)||!forth_vm_define_native(&vm,"NOTICE",word_notice)||!forth_vm_define_native(&vm,"PART",word_part)||!forth_vm_define_native(&vm,"AFTER",word_after)||!forth_vm_define_native(&vm,"EVERY",word_every)||!forth_vm_define_native(&vm,"CANCEL",word_cancel))return -1;initialized=1;return 0;}
 void forc_runtime_shutdown(void){memset(&vm,0,sizeof(vm));initialized=0;}
+int forc_runtime_stack_depth(void){return forth_vm_depth(&vm);}
+int forc_runtime_stack_peek(long *value){return forth_vm_peek(&vm,value);}
 int forc_runtime_word(const char*word,const irc_event*event,char*reply,size_t rs){(void)event;if(!initialized||!word||!reply||!rs)return 0;forth_vm_clear_output(&vm);if(!forth_vm_eval(&vm,word))return 0;if(forth_vm_output(&vm)[0]=='\0')return 0;snprintf(reply,rs,"%s",forth_vm_output(&vm));return 1;}
 int forc_runtime_event(const char*n,const irc_event*e,char*r,size_t rs){if(!initialized||!n||!e||!r||!rs)return 0;return forc_runtime_word(n,e,r,rs);}
 void forc_runtime_set_output_sink(const irc_output_sink*s){if(s)forc_sink=*s;else memset(&forc_sink,0,sizeof(forc_sink));}
