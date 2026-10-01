@@ -17,6 +17,7 @@ int forth_vm_push_string(forth_vm *vm,const char *value);
 int forth_vm_pop(forth_vm *vm,long *value);
 int forth_vm_pop_string(forth_vm *vm,char *value,size_t value_size);
 int forth_vm_define_native(forth_vm *vm,const char *name,forth_native_fn fn);
+int forth_vm_define_colon(forth_vm *vm,const char *name,const char *body);
 int forth_vm_eval(forth_vm *vm,const char *source);
 int forth_vm_emit(forth_vm *vm,const char *text);
 const char *forth_vm_output(const forth_vm *vm);
