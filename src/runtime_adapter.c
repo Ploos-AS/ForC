@@ -3,8 +3,8 @@
 #include "timer_handlers.h"
 #include <stdio.h>
 #include <string.h>
-static int initialized; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
-void forc_runtime_timer_init(void){bot_timer_registry_init(&forc_timers);}
+static bot_named_timer_context forc_named_timers[BOT_MAX_TIMERS]; static size_t forc_named_count;\nstatic int initialized; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
+void forc_runtime_timer_init(void){bot_timer_registry_init(&forc_timers);memset(forc_named_timers,0,sizeof(forc_named_timers));forc_named_count=0;}
 bot_timer_id forc_runtime_timer_after(uint64_t d,bot_timer_fn fn,void *u){return bot_timer_add(&forc_timers,d,0,0,fn,u);}
 bot_timer_id forc_runtime_timer_every(uint64_t i,bot_timer_fn fn,void *u){return bot_timer_add(&forc_timers,i,i,1,fn,u);}
 int forc_runtime_timer_cancel(bot_timer_id id){return bot_timer_cancel(&forc_timers,id);}
