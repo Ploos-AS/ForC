@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 typedef struct { char event[32]; char handler[32]; int active; } forc_event_binding; static forc_event_binding forc_events[8];
-static bot_named_timer_context forc_named_timers[BOT_MAX_TIMERS]; static size_t forc_named_count;\nstatic int initialized;
+static bot_named_timer_context forc_named_timers[BOT_MAX_TIMERS]; static size_t forc_named_count;
+static int initialized;
 static bot_runtime *bot_rt; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
 void forc_runtime_timer_init(void){bot_timer_registry_init(&forc_timers);memset(forc_named_timers,0,sizeof(forc_named_timers));forc_named_count=0;}
 bot_timer_id forc_runtime_timer_after(uint64_t d,bot_timer_fn fn,void *u){return bot_timer_add(&forc_timers,d,0,0,fn,u);}
