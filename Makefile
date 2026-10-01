@@ -76,6 +76,6 @@ test: $(BIN) $(TEST_BOT_STATE_BACKEND) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVE
 clean:
 	rm -rf build
 
-$(TEST_BOT_STATE_BACKEND): tests/test_bot_state_backend.c src/bot_state_backend.c src/bot_state.c src/bot_state.h src/bot_state_backend.h
+$(TEST_BOT_STATE_BACKEND): tests/test_bot_state_backend.c src/bot_state.c src/bot_state.h src/bot_state_backend.h
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_bot_state_backend.c src/bot_state.c -o $(TEST_BOT_STATE_BACKEND)
