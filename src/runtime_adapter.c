@@ -4,7 +4,9 @@
 #include "timer_handlers.h"
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 typedef struct { char event[32]; char handler[32]; int active; } forc_event_binding; static forc_event_binding forc_events[8];
+static forc_event_binding forc_commands[32];
 static bot_named_timer_context forc_named_timers[BOT_MAX_TIMERS]; static size_t forc_named_count;
 static int initialized;
 static bot_runtime *bot_rt; static forth_vm vm; static irc_output_sink forc_sink; static bot_timer_registry forc_timers;
