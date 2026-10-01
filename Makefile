@@ -9,6 +9,7 @@ TEST_RUNTIME_DISPATCH := build/test_runtime_dispatch
 TEST_TIMERS := build/test_timers
 TEST_TIMER_HANDLERS := build/test_timer_handlers
 TEST_FORTH_VM := build/test_forth_vm
+TEST_FORTH_TIMER := build/test_forth_timer
 SRC := src/main.c src/irc_core.c src/dispatcher.c src/events.c src/runtime_adapter.c src/runtime_dispatch.c src/timers.c src/timer_handlers.c src/forth_vm.c
 .PHONY: all test clean
 all: $(BIN)
@@ -39,7 +40,11 @@ $(TEST_TIMERS): tests/test_timers.c src/timers.c src/timers.h
 $(TEST_TIMER_HANDLERS): tests/test_timer_handlers.c src/timer_handlers.c src/timer_handlers.h
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_timer_handlers.c src/timer_handlers.c -o $(TEST_TIMER_HANDLERS)
-test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TEST_RUNTIME_DISPATCH) $(TEST_FORTH_VM)
+$(TEST_FORTH_TIMER): tests/test_forth_timer.c src/runtime_adapter.c src/forth_vm.c src/timers.c src/timer_handlers.c
+	@mkdir -p build
+	$(CC) $(CFLAGS) tests/test_forth_timer.c src/runtime_adapter.c src/forth_vm.c src/timers.c src/timer_handlers.c -o $(TEST_FORTH_TIMER)
+
+test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TEST_RUNTIME_DISPATCH) $(TEST_FORTH_VM) $(TEST_FORTH_TIMER)
 	@./$(BIN) | grep -q "ForC M0"
 	@./$(TEST_IRC)
 	@./$(TEST_DISPATCHER)
@@ -49,6 +54,7 @@ test: $(BIN) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TES
 	@./$(TEST_TIMERS)
 	@./$(TEST_TIMER_HANDLERS)
 	@./$(TEST_FORTH_VM)
+	@./$(TEST_FORTH_TIMER)
 	@echo "ForC M1 tests: PASS"
 clean:
 	rm -rf build
