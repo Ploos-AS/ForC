@@ -43,10 +43,10 @@ $(TEST_EVENTS): tests/test_events.c src/irc_core.c src/events.c src/irc_core.h s
 	$(CC) $(CFLAGS) tests/test_events.c src/irc_core.c src/events.c -o $(TEST_EVENTS)
 $(TEST_RUNTIME): tests/test_runtime.c src/runtime_adapter.c src/runtime_adapter.h src/forth_vm.c src/forth_vm.h src/irc_core.h
 	@mkdir -p build
-	$(CC) $(CFLAGS) tests/test_runtime.c src/runtime_adapter.c src/forth_vm.c src/bot_runtime.c src/bot_state.c src/bot_caps.c src/events.c src/timers.c src/timer_handlers.c src/irc_output.c src/irc_output_sink.c -o $(TEST_RUNTIME)
+	$(CC) $(CFLAGS) tests/test_runtime.c src/runtime_adapter.c src/forth_vm.c src/bot_runtime.c src/bot_state.c src/bot_caps.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/events.c src/timers.c src/timer_handlers.c src/irc_output.c src/irc_output_sink.c -o $(TEST_RUNTIME)
 $(TEST_RUNTIME_DISPATCH) $(TEST_TIMERS) $(TEST_TIMER_HANDLERS): tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/forth_vm.c
 	@mkdir -p build
-	$(CC) $(CFLAGS) tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/forth_vm.c -o $(TEST_RUNTIME_DISPATCH)
+	$(CC) $(CFLAGS) tests/test_runtime_dispatch.c src/irc_core.c src/runtime_adapter.c src/runtime_dispatch.c src/forth_vm.c src/bot_runtime.c src/bot_state.c src/bot_caps.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/events.c src/timers.c src/timer_handlers.c src/irc_output.c src/irc_output_sink.c -o $(TEST_RUNTIME_DISPATCH)
 $(TEST_FORTH_VM): tests/test_forth_vm.c src/forth_vm.c src/forth_vm.h
 	@mkdir -p build
 	$(CC) $(CFLAGS) tests/test_forth_vm.c src/forth_vm.c -o $(TEST_FORTH_VM)
