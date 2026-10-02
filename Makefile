@@ -58,7 +58,7 @@ $(TEST_TIMER_HANDLERS): tests/test_timer_handlers.c src/timer_handlers.c src/tim
 	$(CC) $(CFLAGS) tests/test_timer_handlers.c src/timer_handlers.c -o $(TEST_TIMER_HANDLERS)
 $(TEST_FORTH_TIMER): tests/test_forth_timer.c src/runtime_adapter.c src/forth_vm.c src/timers.c src/timer_handlers.c
 	@mkdir -p build
-	$(CC) $(CFLAGS) tests/test_forth_timer.c src/runtime_adapter.c src/forth_vm.c src/timers.c src/timer_handlers.c -o $(TEST_FORTH_TIMER)
+	$(CC) $(CFLAGS) tests/test_forth_timer.c src/runtime_adapter.c src/forth_vm.c src/bot_runtime.c src/bot_state.c src/bot_caps.c src/bot_state_file.c src/bot_state_file_codec.c src/bot_state_file_save.c src/events.c src/timers.c src/timer_handlers.c src/irc_output.c src/irc_output_sink.c -o $(TEST_FORTH_TIMER)
 
 test: $(BIN) $(TEST_BOT_RUNTIME_PERSISTENCE) $(TEST_BOT_STATE_BACKEND) $(TEST_BOT_STATE_CODEC) $(TEST_BOT_STATE_CODEC_INVALID) $(TEST_IRC) $(TEST_DISPATCHER) $(TEST_EVENTS) $(TEST_RUNTIME) $(TEST_RUNTIME_DISPATCH) $(TEST_BOT_STATE) $(TEST_BOT_CAPS) $(TEST_BOT_RUNTIME) $(TEST_FORTH_VM) $(TEST_FORTH_TIMER)
 	@./$(BIN) | grep -q "ForC M0"
