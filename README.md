@@ -71,7 +71,7 @@ A privileged IRC/private-message REPL is a later milestone, not an M0 requiremen
 7. No malware or offensive payloads are stored in the repository.
 
 
-Standalone qualification requires the bot to build and pass its core test suite with PBMP, BotWeb, BotAI and BotLogic disabled. None of these integrations may become a required build/runtime dependency.
+Standalone qualification requires the complete bot, including its embedded Forth VM, to build and pass its test suite with PBMP, BotWeb, BotAI and BotLogic disabled. The language/runtime is a required part of ForC, not an optional integration. PBMP, BotWeb, BotAI and BotLogic must remain optional build/runtime dependencies.
 
 ## License
 
