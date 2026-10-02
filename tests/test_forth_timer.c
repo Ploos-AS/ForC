@@ -1,10 +1,11 @@
 #include "../src/runtime_adapter.h"
 #include <stdio.h>
+#include <string.h>
 int main(void){irc_event e={0};char reply[128]={0};long id=0;if(forc_runtime_init()!=0)return 1;if(!forc_runtime_word(": TICK PING ; 20 \"TICK\" EVERY",&e,reply,sizeof(reply)))return 2;if(forc_runtime_stack_depth()!=1||!forc_runtime_stack_peek(&id)||id<=0)return 3;if(forc_runtime_timer_poll(19)!=0)return 4;if(forc_runtime_timer_poll(20)!=1)return 5;if(forc_runtime_timer_poll(40)!=1)return 6;if(!forc_runtime_timer_cancel((bot_timer_id)id))return 7;if(forc_runtime_timer_poll(60)!=0)return 8;if(!forc_runtime_word(": WELCOME \"Registered JOIN\" ; \"JOIN\" \"WELCOME\" ON",&e,reply,sizeof(reply)))return 15;
  irc_event ev={0}; ev.type=IRC_EVENT_JOIN; snprintf(ev.nick,sizeof(ev.nick),"alice"); snprintf(ev.target,sizeof(ev.target),"#test"); memset(reply,0,sizeof(reply)); if(!forc_runtime_event("JOIN",&ev,reply,sizeof(reply)))return 16; if(strcmp(reply,"Registered JOIN")!=0)return 17;
  if(!forc_runtime_word(": HELLO2 \"Registered COMMAND\" ; \"!hello2\" \"HELLO2\" COMMAND",&e,reply,sizeof(reply)))return 18;
  memset(reply,0,sizeof(reply)); if(!forc_runtime_command("!hello2",&e,reply,sizeof(reply)))return 19; if(strcmp(reply,"Registered COMMAND")!=0)return 20;
- if(!forc_runtime_word(": CTX \\"TEXT\\" ; \\"!ctx\\" \\"CTX\\" COMMAND",&e,reply,sizeof(reply)))return 21;
+ if(!forc_runtime_word(": CTX \"TEXT\" ; \"!ctx\" \"CTX\" COMMAND",&e,reply,sizeof(reply)))return 21;
  memset(reply,0,sizeof(reply)); memset(&e,0,sizeof(e)); e.type=IRC_EVENT_PRIVMSG; snprintf(e.nick,sizeof(e.nick),"alice"); snprintf(e.target,sizeof(e.target),"#test"); snprintf(e.text,sizeof(e.text),"!ctx Per Ola"); if(!forc_runtime_command("!ctx",&e,reply,sizeof(reply)))return 22; if(strcmp(reply,"!ctx Per Ola")!=0)return 23;
  if(!forc_runtime_word(": ARG COMMAND ARGS ; \"!args\" \"ARG\" COMMAND",&e,reply,sizeof(reply)))return 24; memset(&e,0,sizeof(e)); e.type=IRC_EVENT_PRIVMSG; snprintf(e.nick,sizeof(e.nick),"alice"); snprintf(e.target,sizeof(e.target),"#test"); snprintf(e.text,sizeof(e.text),"!args Per Ola"); if(!forc_runtime_command("!args",&e,reply,sizeof(reply)))return 25; if(strcmp(reply,"argsPer Ola")!=0)return 26;
  forc_runtime_shutdown();puts("ForC Forth timer ID lifecycle: PASS");return 0;}
